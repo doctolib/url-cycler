@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      <title>URL cycler</title>
+      <meta name="description" content="Rotate several urls in a same browser tab.">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+      <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+      <style type="text/css">
+        html, body {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        iframe {
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+      </style>
+      <script>
+        var params = new URLSearchParams(window.location.search);
+        var urls = [1, 2, 3, 4, 5].reduce(function (urls, i) {
+          var url = params.get('url_' + i);
+
+          if (url) {
+            urls.push(url);
+          }
+
+          return urls;
+        }, []);
+
+        $(document).ready(function () {
+          var $iframe = $('iframe');
+
+          if (urls.length > 0) {
+            var delay = parseInt(params.get('delay') || 10000, 10);
+            var currentUrlIndex = 0;
+            $('.container').hide();
+
+            function changeUrl() {
+              $iframe.attr('src', urls[currentUrlIndex]);
+              if (currentUrlIndex == 0) {
+                currentUrlIndex = urls.length - 1;
+              } else {
+                currentUrlIndex = currentUrlIndex -1;
+              }
+            }
+
+            changeUrl();
+            setInterval(changeUrl, delay * 1000);
+          } else {
+            $iframe.hide();
+          }
+        });
+      </script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>URL cycler</h2>
+      <div class="card">
+        <div class="card-block">
+          <form method="get">
+            <div class="form-group">
+              <label for="url_1">URL 1</label>
+              <input name="url_1" type="text" class="form-control" id="url_1" placeholder="http://">
+            </div>
+            <div class="form-group">
+              <label for="url_2">URL 2</label>
+              <input name="url_2" type="text" class="form-control" id="url_2" placeholder="http://">
+            </div>
+            <div class="form-group">
+              <label for="url_3">URL 3</label>
+              <input name="url_3" type="text" class="form-control" id="url_3" placeholder="http://">
+            </div>
+            <div class="form-group">
+              <label for="url_4">URL 4</label>
+              <input name="url_4" type="text" class="form-control" id="url_4" placeholder="http://">
+            </div>
+            <div class="form-group">
+              <label for="url_5">URL 5</label>
+              <input name="url_5" type="text" class="form-control" id="url_5" placeholder="http://">
+            </div>
+            <div class="form-group">
+              <label for="delay">Delay (seconds)</label>
+              <input name="delay" type="text" class="form-control" id="delay" placeholder="10">
+            </div>
+            <div class="form-group">
+              <input type="submit" value="Set up" class="btn btn-primary">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <iframe target="_top"></iframe>
+  </body>
+</html>
